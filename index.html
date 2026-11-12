@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Celsia · Quarantine care console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#11120f;--s1:#171814;--s2:#1f201b;--b:#2e2f28;--t:#ece8e1;--m:#8f8c82;--ac:#a8e1d5;--ac2:#c3d4d9;--w:#e8c277;--bad:#e58b84;--ok:#8fd6b0}
+*{box-sizing:border-box;margin:0}
+body{font:14px/1.5 Manrope,system-ui,sans-serif;background:var(--bg);color:var(--t);min-height:100vh;background-image:radial-gradient(900px 500px at 85% -10%,#a8e1d516,transparent),radial-gradient(700px 500px at -10% 10%,#c3d4d916,transparent);background-attachment:fixed}
+button{font:inherit;cursor:pointer;color:inherit}
+.top{display:flex;align-items:center;gap:20px;padding:12px 28px;border-bottom:1px solid var(--b);position:sticky;top:0;background:#11120fd9;backdrop-filter:blur(14px);z-index:5;flex-wrap:wrap}
+.logo{display:flex;gap:10px;align-items:center;font-weight:700;font-size:16px}
+.mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;color:#10201c;font-weight:800}
+.tabs{display:flex;gap:4px;background:var(--s1);padding:4px;border-radius:12px;border:1px solid var(--b)}
+.tabs button{border:0;background:none;padding:7px 14px;border-radius:9px;color:var(--m);font-weight:500}
+.tabs .on{background:var(--s2);color:var(--t);box-shadow:0 0 0 1px var(--b)}
+.sp{flex:1}.fl{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.m{color:var(--m)}.sm{font-size:12px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:500;background:#ffffff0d;color:var(--m);border:1px solid #ffffff12;white-space:nowrap}
+.chip.ok{color:var(--ok);background:#8fd6b014}.chip.w{color:var(--w);background:#e8c27714}.chip.bad{color:var(--bad);background:#e58b8414}.chip.ac{color:var(--ac);background:#a8e1d514}
+button.chip{cursor:pointer}button.chip.on{background:var(--ac);color:#10201c;border-color:var(--ac)}
+main{max-width:1180px;margin:0 auto;padding:28px}
+h1{font-size:26px;letter-spacing:-.6px}h3{font-size:18px;margin-bottom:2px}h2{font-size:15px;font-weight:600}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.card{background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--b);border-radius:16px;padding:18px}
+.grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.kpi b{font-size:32px;letter-spacing:-1.2px;display:block;margin:2px 0 8px}
+.bar{height:6px;background:#ffffff12;border-radius:9px;position:relative;margin:6px 0}.bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .6s}
+.bar u{position:absolute;top:-4px;width:2px;height:14px;background:var(--t);opacity:.8}
+.row{display:flex;align-items:center;gap:14px;padding:11px 12px;border-radius:12px;border:1px solid transparent;cursor:pointer;transition:background .15s}
+.row:hover{background:#ffffff09;border-color:var(--b)}.row.dim{opacity:.5}
+.bed{min-width:44px;text-align:center;padding:6px 0;border-radius:10px;background:#ffffff0a;border:1px solid var(--b);font:500 12px 'IBM Plex Mono',monospace}
+.btn{border:1px solid var(--b);background:var(--s2);padding:8px 14px;border-radius:10px;font-weight:500;transition:.15s;white-space:nowrap}.btn:hover{border-color:#4a4b41}
+.btn.p{background:linear-gradient(135deg,var(--ac),#c3d4d9);color:#10201c;border:0;font-weight:600}.btn.p:hover{filter:brightness(1.1)}
+.btn.d{background:#e58b841a;color:var(--bad);border-color:#e58b8440}.btn:disabled{opacity:.35;cursor:not-allowed}
+.dots{display:flex;gap:4px}.dots i{width:8px;height:8px;border-radius:50%;background:#ffffff18}.dots i.on{background:var(--ok);box-shadow:0 0 8px #8fd6b080}
+.ov{position:fixed;inset:0;background:#050504cc;backdrop-filter:blur(6px);display:grid;place-items:center;z-index:20;padding:16px;animation:f .15s}
+.md{width:min(480px,100%);max-height:92vh;overflow:auto;background:var(--s1);border:1px solid var(--b);border-radius:20px;padding:24px;box-shadow:0 30px 80px #000a;animation:u .2s}
+.md.wide{width:min(600px,100%)}
+@keyframes f{from{opacity:0}}@keyframes u{from{transform:translateY(12px);opacity:0}}
+.note{padding:10px 12px;border-radius:10px;font-size:13px;margin:12px 0;border:1px solid}
+.note.w{color:var(--w);background:#e8c27710;border-color:#e8c27735}.note.bad{color:var(--bad);background:#e58b8410;border-color:#e58b8435}.note.ok{color:var(--ok);background:#8fd6b010;border-color:#8fd6b035}
+input,textarea{width:100%;background:var(--bg);border:1px solid var(--b);color:var(--t);padding:10px 12px;border-radius:10px;font:inherit;outline:0;margin:6px 0 10px;resize:none}
+input:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px #a8e1d51f}
+label{font-size:12px;color:var(--m);font-weight:500}
+.big{display:flex;align-items:center;gap:10px}.big input{font-size:38px;font-weight:600;text-align:center;padding:14px;letter-spacing:-1px}.big span{font-size:22px;color:var(--m)}
+.r2{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+.seg{display:flex;background:var(--bg);border:1px solid var(--b);border-radius:12px;padding:4px;gap:4px;margin:14px 0 4px}.seg button{flex:1;border:0;background:none;padding:8px;border-radius:9px;color:var(--m);font-weight:500}.seg .on{background:var(--s2);color:var(--t);box-shadow:0 0 0 1px var(--b)}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.stat div{background:#ffffff08;border:1px solid var(--b);border-radius:12px;padding:10px 12px}.stat b{font-size:20px;display:block}
+.ev{padding:8px 0;border-bottom:1px solid #ffffff0a;font-size:13px}.ev .t{color:var(--m);font-size:12px;margin-right:8px}.rd{color:var(--bad)}
+.tile{aspect-ratio:1.25;border-radius:12px;border:1px solid var(--b);background:var(--s1);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0;font-size:11px;color:var(--m)}.tile b{font:500 14px 'IBM Plex Mono',monospace;color:var(--t)}
+.tile.free{border-style:dashed;opacity:.45}.tile.fev{border-color:#e58b8465;background:#e58b8414}.tile.okk{border-color:#a8e1d555;background:#a8e1d514}.tile.rdy{border-color:#8fd6b075;background:#8fd6b024}.tile:not(.free):hover{transform:translateY(-2px)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:10px}
+.toasts{position:fixed;bottom:22px;right:22px;display:grid;gap:8px;z-index:30}.toast{background:var(--s2);border:1px solid var(--b);padding:12px 16px;border-radius:12px;box-shadow:0 10px 40px #000a;animation:u .2s;border-left:3px solid var(--ok)}.toast.bad{border-left-color:var(--bad)}
+.lg{max-width:900px;margin:0 auto;padding:9vh 24px;text-align:center;display:grid;gap:18px;justify-items:center}.lg p{max-width:520px}
+.role{text-align:left;display:grid;gap:10px;justify-items:start;transition:.2s;width:100%}.role:hover{transform:translateY(-3px);border-color:#a8e1d555}.role b{font-size:17px}.role em{color:var(--ac);font-style:normal;font-weight:600;margin-top:4px}
+.lnk{background:none;border:0;color:var(--ac);text-decoration:underline}
+details summary{cursor:pointer;padding:8px 4px;color:var(--m)}
+.scr{max-height:560px;overflow:auto}
+.lg h1{font-size:40px;max-width:640px;line-height:1.1;font-weight:800}
+.ecg{width:min(620px,100%);height:72px;fill:none;stroke:var(--ac);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400;animation:ecg 3.6s ease-out infinite;filter:drop-shadow(0 0 7px #a8e1d566)}
+@keyframes ecg{0%{stroke-dashoffset:1400;opacity:1}60%,85%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+.btn kbd{font:500 11px 'IBM Plex Mono',monospace;color:var(--m);border:1px solid var(--b);border-radius:5px;padding:1px 5px;margin-left:8px}
+@media(prefers-reduced-motion:reduce){.ecg{animation:none}}
+@media(max-width:700px){main{padding:16px}.top{padding:10px 16px}.g2{grid-template-columns:1fr}}
+</style></head><body><div id="app"></div><div class="toasts" id="toasts"></div>
+<script>
+const MARK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h5l3-7 4 14 3-7h5"/></svg>';
+const $=s=>document.querySelector(s),DAY=864e5,CAP=74;
+const sod=t=>{const d=new Date(t);d.setHours(0,0,0,0);return+d};
+const fmt=t=>new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+const dfmt=t=>new Date(t).toLocaleDateString([],{day:'numeric',month:'short'});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const FN=['Aarav','Diya','Rohan','Meera','Kabir','Ananya','Vihaan','Isha','Arjun','Saanvi','Dev'],LN=['Sharma','Patel','Verma','Iyer','Nair','Khan','Reddy','Singh'];
+const USERS={nurse:{n:'Priya Nair',r:'nurse',t:'Nurse'},doctor:{n:'Dr. Arvind Mehta',r:'doctor',t:'Doctor'},admin:{n:'Sana Kapoor',r:'admin',t:'Admin'}};
+const NAV={nurse:[['round','Temperature round']],doctor:[['rounds','Doctor rounds'],['beds','Bed map']],admin:[['dash','Dashboard'],['beds','Bed map'],['log','Activity']]};
+let D,U=null,tab='',filt='pending',q='';
+
+function seed(){let s=7;const r=()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const T=sod(Date.now()),now=Date.now(),P=[];
+for(let i=0;i<74;i++){const rec=i%9==0?3:i%13==0?4:i%7==0?2:0;let adm=Math.max(1+Math.floor(r()*9),rec+1);
+const p={id:'P'+(1001+i),n:FN[i%11]+' '+LN[i%8],age:18+Math.floor(r()*62),bed:i+1,adm:T-adm*DAY,t:[],v:[],st:'active'};
+for(let d=adm;d>=1;d--){const n=1+(r()<.25?1:0);for(let k=0;k<n;k++)p.t.push({ts:T-d*DAY+(8+k*5+r()*2)*36e5,v:+(d<=rec?36.4+r()*1.1:38.1+r()*1.9).toFixed(1),by:'Priya Nair'})}
+if(i%2==0){const ts=T+(now-T)*(.3+r()*.5);p.t.push({ts,v:+(rec?36.5+r()*.9:38.1+r()*1.9).toFixed(1),by:'Priya Nair'});if(i%5==0)p.v.push({ts:ts+(now-ts)*.5,n:'Reviewed. Continue supportive care and hydration.',by:'Dr. Arvind Mehta'})}
+P.push(p)}
+const C=[];for(let i=0;i<60;i++)C.push({o:i<11?'deceased':'cured',los:3+Math.floor(r()*7),ts:T-Math.floor(r()*20)*DAY});
+return{p:P,c:C,th:38,log:[],n:75}}
+try{D=JSON.parse(localStorage.getItem('celsia.v1'))}catch(e){}if(!D)D=seed();
+const save=()=>{try{localStorage.setItem('celsia.v1',JSON.stringify(D))}catch(e){}};
+const log=m=>{D.log.unshift({ts:Date.now(),w:U.n,r:U.t,m});D.log=D.log.slice(0,80);save()};
+const get=id=>D.p.find(p=>p.id==id),act=()=>D.p.filter(p=>p.st=='active'),last=p=>p.t[p.t.length-1];
+const todayT=p=>p.t.filter(x=>x.ts>=sod(Date.now())),todayV=p=>p.v.filter(x=>x.ts>=sod(Date.now()));
+function streak(p){const T=sod(Date.now());let n=0;for(let d=1;;d++){const s=T-d*DAY;if(s<p.adm)break;const r=p.t.filter(x=>x.ts>=s&&x.ts<s+DAY);if(!r.length||r.some(x=>x.v>=D.th))break;n++}return n}
+const day=p=>Math.floor((sod(Date.now())-p.adm)/DAY)+1;
+function met(){const c=D.c,n=c.length,cu=c.filter(x=>x.o=='cured').length,de=n-cu;return{n,cu,de,cr:n?cu/n*100:0,mr:n?de/n*100:0,los:n?c.reduce((a,x)=>a+x.los,0)/n:0}}
+const freeBed=()=>{const u=new Set(act().map(p=>p.bed));for(let b=1;b<=CAP;b++)if(!u.has(b))return b};
+function closeCase(p,o){p.st=o;p.out=Date.now();D.c.push({o,los:day(p),ts:Date.now()})}
+const dots=s=>`<span class="dots" title="${s}/3 fever-free days">${[0,1,2].map(i=>`<i class="${i<s?'on':''}"></i>`).join('')}</span>`;
+const pill=(k,t,n)=>`<button class="chip ${filt==k?'on':''}" data-a="filt" data-id="${k}">${t} ${n}</button>`;
+function toast(m,k){const d=document.createElement('div');d.className='toast '+(k||'');d.textContent=m;$('#toasts').append(d);setTimeout(()=>d.remove(),3200)}
+function modal(h,w){close();const o=document.createElement('div');o.className='ov';o.id='ov';o.innerHTML=`<div class="md ${w||''}">${h}</div>`;o.onclick=e=>{if(e.target==o)close()};document.body.append(o);const f=o.querySelector('input,textarea');f&&f.focus()}
+function close(){const o=$('#ov');o&&o.remove()}
+
+function row(p,o){o=o||{};const l=last(p);return `<div class="row ${o.dim?'dim':''}" data-a="open" data-id="${p.id}"><div class="bed">${p.bed}</div><div style="flex:1;min-width:0"><b>${esc(p.n)}</b><div class="m sm">${p.age}y · day ${day(p)} · ${l?`last ${l.v}°C at ${fmt(l.ts)}`:'no readings'}</div></div>${o.chips||''}${dots(streak(p))}${o.btn||''}</div>`}
+
+function login(){return `<div class="lg"><svg class="ecg" viewBox="0 0 600 80"><path d="M0 40H120l12-4 10 4h18l8-30 14 62 12-48 8 16h40l10-6 12 6h60l10-4 10 4h80l8-26 12 54 10-28h60"/></svg><h1>Know who has been seen, and who is ready to go home.</h1><p class="m">Celsia keeps temperature rounds, doctor visits and discharges in one shared console. Pick a role to begin.</p>
+<div class="grid g3" style="width:100%">${[['nurse','Nurse','Priya Nair','Record daily temperatures from a live pending list, with typo and duplicate guards.'],['doctor','Doctor','Dr. Arvind Mehta','See only patients whose temperature is already taken. Confirm discharges.'],['admin','Admin','Sana Kapoor','Admit into 74 beds, process confirmed discharges, track cure and mortality rates.']].map(([k,t,n,d])=>`<button class="card role" data-a="login" data-id="${k}"><span class="chip ac">${t}</span><b>${n}</b><span class="m">${d}</span><em>Enter as ${t.toLowerCase()}</em></button>`).join('')}</div>
+<p class="m sm">Demo data lives in your browser. <button class="lnk" data-a="reset">Reset demo data</button></p></div>`}
+
+function vNurse(){const A=act(),done=A.filter(p=>todayT(p).length),pend=A.length-done.length,late=new Date().getHours()>=14&&pend;
+return `<div class="hd"><div><h1>Temperature round</h1><p class="m">${new Date().toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})}</p></div></div>
+<div class="card" style="margin:18px 0"><div class="fl" style="justify-content:space-between"><b>${done.length} of ${A.length} patients recorded</b><span class="m">${pend} pending</span></div><div class="bar" style="margin-top:12px"><i style="width:${A.length?done.length/A.length*100:0}%"></i></div></div>
+${late?`<div class="note w">It is past 2 PM and ${pend} patients still have no reading today.</div>`:''}
+<div class="fl" style="margin-bottom:12px">${pill('pending','Pending',pend)}${pill('done','Done',done.length)}${pill('all','All',A.length)}<span class="sp"></span><input id="q" placeholder="Search name or bed" value="${esc(q)}" style="max-width:240px;margin:0"></div><div class="card scr" id="lst"></div>`}
+function fillNurse(){const L=act().filter(p=>(filt=='all'||(filt=='done')==!!todayT(p).length)&&(!q||(p.n+' '+p.bed).toLowerCase().includes(q.toLowerCase())));
+$('#lst').innerHTML=L.length?L.map(p=>{const t=todayT(p).slice(-1)[0];return row(p,{chips:t?`<span class="chip ${t.v>=D.th?'bad':'ok'}">${t.v}°C at ${fmt(t.ts)}</span>`:'<span class="chip w">Pending</span>',btn:`<button class="btn ${t?'':'p'}" data-a="rec" data-id="${p.id}">${t?'Record again':'Record'}</button>`})}).join(''):'<p class="m" style="padding:20px;text-align:center">Nobody matches. All caught up, or try another filter.</p>'}
+
+function vDoc(){const A=act(),Rd=A.filter(p=>todayT(p).length&&!todayV(p).length).sort((a,b)=>(streak(b)>=3)-(streak(a)>=3)||last(b).v-last(a).v),W=A.filter(p=>!todayT(p).length),S=A.filter(p=>todayV(p).length),R=A.filter(p=>streak(p)>=3||p.ok).sort((a,b)=>streak(b)-streak(a));
+const st=(n,l,c)=>`<div class="card kpi"><span class="m">${l}</span><b style="color:${c}">${n}</b></div>`;
+return `<div class="hd"><div><h1>Doctor rounds</h1><p class="m">Patients with a temperature on file come first, so you never visit blind.</p></div></div>
+<div class="grid g4" style="margin:18px 0">${st(Rd.length,'Ready to see','var(--ac)')}${st(W.length,'Awaiting temperature','var(--w)')}${st(S.length,'Seen today','var(--t)')}${st(R.length,'Discharge candidates','var(--ok)')}</div>
+${R.length?`<div class="card" style="margin-bottom:14px"><h2 style="margin-bottom:8px">Discharge candidates</h2>${R.map(p=>row(p,{chips:(streak(p)>=4?'<span class="chip bad">Overdue 24h+</span>':'')+(p.ok?'<span class="chip ok">Confirmed, awaiting admin</span>':'<span class="chip ac">3-day criterion met</span>'),btn:p.ok?'':`<button class="btn p" data-a="dc" data-id="${p.id}">Review</button>`})).join('')}</div>`:''}
+<div class="grid g2"><div class="card"><h2 style="margin-bottom:8px">Ready to see (${Rd.length})</h2><div class="scr">${Rd.map(p=>row(p,{chips:`<span class="chip ${last(p).v>=D.th?'bad':'ok'}">${last(p).v}°C</span>`,btn:`<button class="btn p" data-a="visit" data-id="${p.id}">Log visit</button>`})).join('')||'<p class="m" style="padding:16px">No one waiting. Nurses will add readings shortly.</p>'}</div></div>
+<div class="card"><h2 style="margin-bottom:8px">Awaiting temperature (${W.length})</h2><div class="scr">${W.map(p=>row(p,{dim:1,chips:'<span class="chip w">No reading</span>',btn:`<button class="btn" data-a="visit" data-id="${p.id}">Visit anyway</button>`})).join('')||'<p class="m" style="padding:16px">Every patient has a reading today.</p>'}</div></div></div>
+<details class="card" style="margin-top:14px"><summary>Seen today (${S.length})</summary>${S.map(p=>row(p,{chips:`<span class="chip ok">Visited ${fmt(todayV(p).slice(-1)[0].ts)}</span>`})).join('')}</details>`}
+
+function vDash(){const A=act(),m=met(),pc=A.length/CAP*100,Q=A.filter(p=>streak(p)>=3||p.ok).sort((a,b)=>streak(b)-streak(a));
+const bar=(v,mk,c)=>`<div class="bar"><i style="width:${Math.min(v,100)}%;background:${c}"></i><u style="left:${mk}%"></u></div>`;
+return `<div class="hd"><div><h1>Dashboard</h1><p class="m">Centre performance and discharge flow.</p></div><button class="btn p" data-a="admit">Admit patient</button></div>
+${m.mr>15?`<div class="note bad" style="margin-top:16px">Mortality is ${m.mr.toFixed(1)}%, above the 15% benchmark (${m.de} of ${m.n} closed cases). Review treatment protocols.</div>`:''}${m.n<20?`<div class="note w">Only ${m.n} closed cases. Rates may be misleading.</div>`:''}
+<div class="grid g4" style="margin:16px 0"><div class="card kpi" style="position:relative"><span class="m">Occupancy</span><b>${A.length}/${CAP}</b><svg viewBox="0 0 44 44" width="68" height="68" style="position:absolute;right:16px;top:16px;transform:rotate(-90deg)"><circle cx="22" cy="22" r="18" fill="none" stroke="#ffffff14" stroke-width="5"/><circle cx="22" cy="22" r="18" fill="none" stroke="${pc>=90?'var(--w)':'var(--ac)'}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${pc*1.131} 113.1"/></svg><span class="chip ${pc>=100?'bad':pc>=90?'w':'ok'}">${pc>=100?'Full':pc>=90?'Near capacity':CAP-A.length+' beds free'}</span></div>
+<div class="card kpi"><span class="m">Cure rate</span><b>${m.cr.toFixed(1)}%</b>${bar(m.cr,85,m.cr<85?'var(--bad)':'var(--ok)')}<span class="chip ${m.cr<85?'bad':'ok'}">Benchmark 85%</span></div>
+<div class="card kpi"><span class="m">Mortality rate</span><b>${m.mr.toFixed(1)}%</b>${bar(m.mr*3,45,m.mr>15?'var(--bad)':'var(--ok)')}<span class="chip ${m.mr>15?'bad':'ok'}">Expected 15%</span></div>
+<div class="card kpi"><span class="m">Average stay</span><b>${m.los.toFixed(1)} days</b><span class="chip">${m.n} closed cases</span></div></div>
+<div class="card"><h2 style="margin-bottom:8px">Discharge queue (${Q.length})</h2>${Q.map(p=>row(p,{chips:(streak(p)>=4?'<span class="chip bad">Overdue 24h+</span>':'')+(p.ok?`<span class="chip ok">${p.ok.early?'Early discharge, ':''}doctor confirmed</span>`:'<span class="chip w">Awaiting doctor</span>'),btn:`<button class="btn p" data-a="proc" data-id="${p.id}" ${p.ok?'':'disabled title="Doctor must confirm first"'}>Process discharge</button>`})).join('')||'<p class="m" style="padding:16px">No patients are ready for discharge.</p>'}</div>`}
+
+function vBeds(){const by={};act().forEach(p=>by[p.bed]=p);let h='';for(let b=1;b<=CAP;b++){const p=by[b],c=!p?'free':p.ok||streak(p)>=3?'rdy':!todayT(p).length?'pen':last(p).v>=D.th?'fev':'okk';h+=`<button class="tile ${c}" ${p?`data-a="open" data-id="${p.id}"`:'disabled'}><b>${b}</b><span>${p?esc(p.n.split(' ')[0]):'Free'}</span></button>`}
+return `<div class="hd"><div><h1>Bed map</h1><p class="m">${act().length} of ${CAP} beds occupied. Tap a bed for the patient file.</p></div><div class="fl"><span class="chip">No reading</span><span class="chip ac">Normal today</span><span class="chip bad">Fever today</span><span class="chip ok">Discharge ready</span></div></div><div class="tiles" style="margin-top:18px">${h}</div>`}
+const vLog=()=>`<h1>Activity</h1><p class="m">Every action is stored with who did it and when.</p><div class="card" style="margin-top:18px">${D.log.map(l=>`<div class="ev"><span class="t">${dfmt(l.ts)} ${fmt(l.ts)}</span><b>${esc(l.w)}</b> <span class="chip">${l.r}</span> ${esc(l.m)}</div>`).join('')||'<p class="m">No actions yet. Record a temperature or admit a patient to see entries here.</p>'}</div>`;
+
+function spark(p){const a=p.t.slice(-14);if(a.length<2)return'<p class="m sm">Not enough readings yet.</p>';const W=400,H=84,y=v=>H-6-(Math.min(Math.max(v,35),41)-35)/6*(H-12),x=i=>i/(a.length-1)*(W-16)+8;
+return `<svg viewBox="0 0 ${W} ${H}" width="100%"><line x1="0" x2="${W}" y1="${y(D.th)}" y2="${y(D.th)}" stroke="#e58b84" stroke-dasharray="4 4" opacity=".5"/><polyline fill="none" stroke="#a8e1d5" stroke-width="2" points="${a.map((z,i)=>x(i)+','+y(z.v)).join(' ')}"/>${a.map((z,i)=>`<circle cx="${x(i)}" cy="${y(z.v)}" r="3" fill="${z.v>=D.th?'#e58b84':'#a8e1d5'}"/>`).join('')}</svg>`}
+
+function detail(id){const p=get(id),l=last(p),s=streak(p),r=U.r;
+const ev=[...p.t.map(x=>({ts:x.ts,h:`<b class="${x.v>=D.th?'rd':''}">${x.v}°C</b> recorded by ${esc(x.by)}`})),...p.v.map(x=>({ts:x.ts,h:`<b>Visit</b> ${esc(x.n)} <span class="m">by ${esc(x.by)}</span>`}))].sort((a,b)=>b.ts-a.ts).slice(0,7);
+const btn=r=='nurse'?`<button class="btn p" data-a="rec" data-id="${id}">Record temperature</button>`:r=='doctor'?`<button class="btn p" data-a="visit" data-id="${id}">Log visit</button>${p.ok?'':`<button class="btn" data-a="dc" data-id="${id}">Discharge decision</button>`}`:p.ok?`<button class="btn p" data-a="proc" data-id="${id}">Process discharge</button>`:'';
+modal(`<div class="fl" style="justify-content:space-between"><div><h3>${esc(p.n)}</h3><span class="m">Bed ${p.bed} · ${p.age}y · day ${day(p)}</span></div><button class="btn" data-a="close">Close</button></div>
+<div class="stat"><div><span class="m sm">Latest</span><b class="${l&&l.v>=D.th?'rd':''}">${l?l.v+'°C':'none'}</b></div><div><span class="m sm">Fever-free</span><b>${Math.min(s,3)}/3 days</b></div><div><span class="m sm">Visits today</span><b>${todayV(p).length}</b></div></div>
+${s>=3?'<div class="note ok">3-day no-fever criterion met.</div>':''}${spark(p)}<div style="margin-top:10px">${ev.map(e=>`<div class="ev"><span class="t">${dfmt(e.ts)} ${fmt(e.ts)}</span>${e.h}</div>`).join('')}</div><div class="r2">${btn}</div>`,'wide')}
+
+function recM(id){const p=get(id),t=todayT(p).slice(-1)[0];
+modal(`<h3>Record temperature</h3><span class="m">${esc(p.n)} · Bed ${p.bed}</span>${t?`<div class="note w">Already recorded today at ${fmt(t.ts)} by ${esc(t.by)} (${t.v}°C). Saving again keeps both readings.</div>`:''}
+<div class="big" style="margin-top:14px"><input id="tv" type="number" step="0.1" inputmode="decimal" placeholder="36.8"><span>°C</span></div><div id="tm"></div>
+<div class="r2"><button class="btn" data-a="close">Cancel</button><button class="btn p" id="go" disabled>Record</button></div>`);
+const i=$('#tv'),g=$('#go'),m=$('#tm');i.oninput=()=>{const v=parseFloat(i.value);g.disabled=true;g.textContent='Record';if(isNaN(v)){m.innerHTML='';return}
+if(v<34||v>43)m.innerHTML='<div class="note bad">That is outside the plausible range of 34 to 43°C. Check for a typing mistake.</div>';
+else{g.disabled=false;if(v>=41){g.textContent='Confirm and record';m.innerHTML='<div class="note w">Extremely high reading. Confirm before saving.</div>'}else m.innerHTML=v>=D.th?'<div class="note bad">Fever reading. This resets the 3-day streak.</div>':'<div class="note ok">Within the normal range.</div>'}};
+i.onkeydown=e=>{if(e.key=='Enter'&&!g.disabled)g.click()};
+g.onclick=()=>{const v=parseFloat(i.value);p.t.push({ts:Date.now(),v:+v.toFixed(1),by:U.n});log(`recorded ${v.toFixed(1)}°C for ${p.n} (bed ${p.bed})`);toast(`Recorded ${v.toFixed(1)}°C for ${p.n}`);render()}}
+
+function visM(id){const p=get(id),no=!todayT(p).length,n=todayV(p).length+1;
+modal(`<h3>Log visit${n>1?' #'+n:''}</h3><span class="m">${esc(p.n)} · Bed ${p.bed}</span>${no?`<div class="note w">No temperature on file today. Visiting first is allowed only as an emergency override.</div><label>Override reason</label><input id="why" placeholder="e.g. Patient in respiratory distress">`:''}
+<label>Treatment notes</label><textarea id="nt" rows="4" placeholder="Assessment and treatment given"></textarea><div class="r2"><button class="btn" data-a="close">Cancel</button><button class="btn p" id="go" disabled>Save visit</button></div>`);
+const nt=$('#nt'),w=$('#why'),g=$('#go'),chk=()=>g.disabled=!(nt.value.trim()&&(!no||w.value.trim()));nt.oninput=chk;w&&(w.oninput=chk);
+g.onclick=()=>{p.v.push({ts:Date.now(),n:nt.value.trim(),by:U.n,ovr:no?w.value.trim():''});log(`visited ${p.name||p.n} (bed ${p.bed})${no?' with emergency override: '+w.value.trim():''}`);toast('Visit saved');render()}}
+
+function dcM(id){const p=get(id),s=streak(p),ok=s>=3;let o='cured';
+modal(`<h3>Discharge decision</h3><span class="m">${esc(p.n)} · Bed ${p.bed}</span><div class="seg"><button class="on" data-o="cured">Cured</button><button data-o="deceased">Deceased</button></div><div id="dm"></div><div class="r2"><button class="btn" data-a="close">Cancel</button><button class="btn p" id="go">Confirm discharge</button></div>`);
+const dm=$('#dm'),g=$('#go'),up=()=>{if(o=='deceased'){dm.innerHTML='<div class="note bad">Records the outcome and frees the bed now. This cannot be undone.</div>';g.textContent='Record death';g.className='btn d'}
+else{g.textContent='Confirm discharge';g.className='btn p';dm.innerHTML=ok?'<div class="note ok">3-day fever-free criterion met. The admin will be alerted to process the discharge.</div>':`<div class="note w">Criterion not met (${s}/3 days). Early discharge needs a reason.</div><textarea id="rs" rows="3" placeholder="Clinical reason for early discharge"></textarea>`}};up();
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{o=b.dataset.o;document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x==b));up()});
+g.onclick=()=>{if(o=='deceased'){closeCase(p,'deceased');log(`recorded death of ${p.n} (bed ${p.bed})`);toast('Outcome recorded. Bed freed.');render();return}
+const rs=$('#rs');if(!ok&&!rs.value.trim()){toast('Enter a reason for early discharge','bad');return}
+p.ok={by:U.n,ts:Date.now(),early:!ok,reason:rs?rs.value.trim():''};log(`confirmed ${ok?'':'early '}discharge for ${p.n} (bed ${p.bed})`);toast('Discharge confirmed. Admin notified.');render()}}
+
+function proc(id){const p=get(id);if(!p.ok)return toast('Doctor must confirm first','bad');closeCase(p,'cured');log(`processed discharge for ${p.n}, bed ${p.bed} is free`);toast(`${p.n} discharged. Bed ${p.bed} is free.`);render()}
+
+function admM(){const full=act().length>=CAP;
+modal(`<h3>Admit patient</h3>${full?'<div class="note bad">No beds available. 74 of 74 are occupied. Process a discharge to free a bed.</div>':`<span class="m">Next free bed: ${freeBed()}</span>`}<div style="margin-top:12px"><label>Full name</label><input id="an" ${full?'disabled':''}><label>Age</label><input id="ag" type="number" ${full?'disabled':''}></div><div id="dup"></div><div class="r2"><button class="btn" data-a="close">Cancel</button><button class="btn p" id="go" disabled>Admit</button></div>`);
+const an=$('#an'),ag=$('#ag'),g=$('#go'),d=$('#dup'),match=()=>act().find(p=>p.n.toLowerCase()==an.value.trim().toLowerCase()),
+chk=()=>{const dp=an.value.trim()&&match(),a=+ag.value;d.innerHTML=dp?`<div class="note w">A patient named ${esc(dp.n)} is already admitted in bed ${dp.bed}. Admit anyway?</div>`:'';g.textContent=dp?'Admit anyway':'Admit';g.disabled=full||an.value.trim().length<2||!(a>0&&a<121)};an.oninput=ag.oninput=chk;
+g.onclick=()=>{const b=freeBed(),p={id:'P'+D.n++,n:an.value.trim(),age:+ag.value,bed:b,adm:sod(Date.now()),t:[],v:[],st:'active'};D.p.push(p);log(`admitted ${p.n} to bed ${b}`);toast(`${p.n} admitted to bed ${b}`);render()}}
+
+function cmd(){if(!U)return;modal('<input id="cq" placeholder="Search patients by name or bed, or jump to a screen" style="font-size:16px"><div id="cr"></div>');const i=$('#cq'),fill=()=>{const k=i.value.toLowerCase().trim(),it=[...NAV[U.r].filter(([t,l])=>!k||l.toLowerCase().includes(k)).map(([t,l])=>({l:'Go to '+l,a:'tab',id:t})),...act().filter(p=>k&&(p.n+' '+p.bed).toLowerCase().includes(k)).map(p=>({l:p.n+' · bed '+p.bed,a:'open',id:p.id}))].slice(0,8);$('#cr').innerHTML=it.map(x=>`<div class="row" data-a="${x.a}" data-id="${x.id}">${esc(x.l)}</div>`).join('')||'<p class="m sm">No matches.</p>'};i.oninput=fill;fill();i.onkeydown=e=>{if(e.key=='Enter'){const f=$('#cr .row');f&&f.click()}}}
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()=='k'){e.preventDefault();cmd()}if(e.key=='Escape')close()});
+function render(){close();const R=$('#app');if(!U){R.innerHTML=login();return}
+const V={round:vNurse,rounds:vDoc,dash:vDash,beds:vBeds,log:vLog};
+R.innerHTML=`<header class="top"><div class="logo"><div class="mark">${MARK}</div>Celsia</div><nav class="tabs">${NAV[U.r].map(([k,t])=>`<button data-a="tab" data-id="${k}" class="${tab==k?'on':''}">${t}</button>`).join('')}</nav><span class="sp"></span><div class="fl"><button class="btn" data-a="cmd">Search<kbd>Ctrl K</kbd></button><div style="text-align:right"><b>${U.n}</b><div class="m sm">${U.t}</div></div><button class="btn" data-a="out">Switch role</button></div></header><main>${V[tab]()}</main>`;
+if(tab=='round'){fillNurse();$('#q').oninput=e=>{q=e.target.value;fillNurse()}}}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const id=el.dataset.id;
+({login:()=>{U=USERS[id];tab=NAV[id][0][0];render()},out:()=>{U=null;render()},tab:()=>{tab=id;render()},filt:()=>{filt=id;render()},open:()=>detail(id),rec:()=>recM(id),visit:()=>visM(id),dc:()=>dcM(id),proc:()=>proc(id),admit:admM,cmd,close,reset:()=>{D=seed();save();toast('Demo data reset');render()}})[el.dataset.a]()});
+render();
+</script></body></html>
